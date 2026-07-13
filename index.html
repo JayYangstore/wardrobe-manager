@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>换季衣物收纳系统</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#f5f0eb!important;color:#2c2c2c;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;min-height:100vh}
+body{max-width:700px;margin:0 auto;padding:0 16px 80px}
+.page{display:none}.page.active{display:block}
+hdr{text-align:center;padding:20px 0 12px;display:block}
+hdr h1{font-size:20px;font-weight:700;color:#1a3a5a}
+hdr .s{color:#999;font-size:12px;margin-top:2px}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:700px;margin:0 auto;background:#fff;padding:8px 16px;display:flex;gap:4px;border-top:1px solid #e0ddd8}
+.nav a{flex:1;text-align:center;padding:8px 0;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;color:#888;cursor:pointer}
+.nav a.act{background:#1a3a5a;color:#fff}
+.sec{margin-bottom:10px}
+.r-hdr{display:flex;align-items:center;gap:6px;padding:10px 2px 6px;font-size:16px;font-weight:700;color:#1a3a5a;border-bottom:2px solid #d0d8e0;margin-bottom:6px}
+.r-hdr .c{font-size:12px;color:#999;font-weight:400;margin-left:auto}
+.s-hdr{font-size:13px;font-weight:600;color:#666;padding:4px 2px}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:10px}
+.cd{padding:12px 14px 14px}
+.ct{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.bg{display:inline-block;background:#1a3a5a;color:#fff;font-size:12px;font-weight:700;padding:2px 10px;border-radius:14px}
+.vb{font-size:12px;color:#5b7a9a;text-decoration:none;font-weight:600;padding:4px 10px;background:#eef3f8;border-radius:6px;cursor:pointer}
+.dt{color:#999;font-size:11px;margin-bottom:4px}
+.il{list-style:none}
+.il li{padding:4px 0;font-size:13px;display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0}
+.il li:last-child{border-bottom:none}
+.il .ct2{color:#888;font-size:12px}
+.nt{font-size:11px;color:#999;margin-top:2px}
+.ft{text-align:center;padding:20px 0;font-size:11px;color:#bbb}
+.btn{display:inline-block;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;border:none;cursor:pointer;color:#fff}
+.btn-p{background:#1a3a5a}.btn-g{background:#2e7d32}.btn-r{background:#c62828}.btn-gy{background:#888}
+.btn-sm{padding:4px 10px;font-size:11px}
+.ac{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.mb{margin-bottom:8px}
+.fg{margin-bottom:8px}
+.fg label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:3px}
+.fg input,.fg textarea,.fg select{width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit}
+.fg textarea{min-height:50px}
+.fr{display:flex;gap:6px}
+.fr>*{flex:1}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;background:rgba(0,0,0,.4)}
+.modal.show{display:flex;align-items:center;justify-content:center}
+.modal-c{background:#fff;border-radius:16px;padding:20px;width:90%;max-width:400px;max-height:80vh;overflow-y:auto}
+.modal-c h2{font-size:17px;margin-bottom:10px;color:#1a3a5a}
+.qr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.qr-it{background:#fff;border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.qr-it .ql{font-size:13px;font-weight:700;color:#1a3a5a}
+.qr-it .qs{font-size:10px;color:#888}
+.ei{display:none}.ei.show{display:block}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.pg a{border-radius:6px;overflow:hidden;border:1px solid #e0ddd8;background:#fff;text-decoration:none;display:block}
+.pg img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.pg .pl{display:block;text-align:center;font-size:10px;color:#555;padding:2px 0}
+.pi{border:2px solid transparent;border-radius:10px;padding:8px;margin:8px 0;display:none}
+.pi.show{display:block}
+.pi img{width:100%;border-radius:8px}
+.pi .pc{display:inline-block;margin-top:4px;padding:4px 12px;background:#e8ecf0;color:#555;border-radius:6px;font-size:11px;cursor:pointer}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media print{@page{margin:4mm}body{background:#fff;padding:4mm}.nav,hdr,.no-print{display:none}.qr-it{border:1px dashed #ccc;box-shadow:none}}
+</style>
+</head>
+<body>
+
+<!-- ====== 顶部导航 ====== -->
+<nav class="nav" id="navBar">
+  <a class="act" onclick="showPage('overview')">🏠 首页</a>
+  <a onclick="showPage('admin')">⚙️ 管理</a>
+  <a onclick="showPage('qrprint')">🖨️ 二维码</a>
+</nav>
+
+<!-- ====== 首页 ====== -->
+<div id="page-overview" class="page active">
+<hdr><h1>🧥 换季衣物收纳</h1><div class="s">共 <span id="totalBags">0</span> 袋</div></hdr>
+<div id="overviewContent"></div>
+<div class="ft">点击衣物名称或「查看」进入详情</div>
+</div>
+
+<!-- ====== 管理页 ====== -->
+<div id="page-admin" class="page">
+<hdr><h1>⚙️ 管理</h1></hdr>
+<div id="adminContent"></div>
+</div>
+
+<!-- ====== 二维码打印页 ====== -->
+<div id="page-qrprint" class="page">
+<hdr><h1>🖨️ 打印二维码</h1><div class="s">裁剪后贴在对应袋子上</div></hdr>
+<button class="btn btn-p" onclick="window.print()" style="margin:0 auto 12px;display:block">🖨️ 打印</button>
+<div id="qrContent" class="qr-grid"></div>
+</div>
+
+<!-- ====== 模态框 ====== -->
+<div id="modal" class="modal"><div class="modal-c" id="modalContent"></div></div>
+
+<script>
+// ====== DATA LAYER ======
+function loadData() {
+  var raw = localStorage.getItem('wd_data');
+  if (raw) return JSON.parse(raw);
+  return {rooms:[],nextBagId:1,nextPhotoId:1};
+}
+function saveData(d) {
+  localStorage.setItem('wd_data', JSON.stringify(d));
+}
+
+// ====== DEFAULT SEED DATA ======
+var DEFAULT_DATA = {"rooms":[
+{"name":"主卧","spots":[{"name":"衣柜顶部","bags":[
+{"id":1,"items":[{"n":"羽绒服","c":2,"p":[]},{"n":"加绒卫衣","c":3,"p":[]},{"n":"厚棉袜","c":5,"p":[]}],"nt":"红色+黑色羽绒服"},
+{"id":2,"items":[{"n":"秋衣秋裤","c":3,"p":[]},{"n":"羊毛衫","c":2,"p":[]},{"n":"保暖背心","c":2,"p":[]}],"nt":""}
+]},{"name":"床底","bags":[{"id":3,"items":[{"n":"厚外套","c":1,"p":[]},{"n":"呢子大衣","c":1,"p":[]},{"n":"皮手套","c":1,"p":[]},{"n":"毛线帽","c":2,"p":[]}],"nt":"卡其色厚外套"}]
+},{"name":"床头柜","bags":[{"id":8,"items":[{"n":"床单","c":3,"p":[]},{"n":"被套","c":2,"p":[]},{"n":"枕头","c":2,"p":[]}],"nt":"备用床上用品"}]
+}]},{"name":"妞妞房间","spots":[{"name":"床底","bags":[{"id":5,"items":[{"n":"黑色滑雪裤","c":1,"p":[]},{"n":"黑色外套","c":1,"p":[]}],"nt":""}]
+},{"name":"顶部柜子","bags":[{"id":6,"items":[{"n":"夏季短袖","c":4,"p":[]},{"n":"薄款长裤","c":3,"p":[]},{"n":"防晒衣","c":2,"p":[]}],"nt":"夏装暂存"}]
+},{"name":"床头衣柜","bags":[{"id":7,"items":[{"n":"毛巾被","c":2,"p":[]},{"n":"薄被子","c":1,"p":[]},{"n":"枕套","c":4,"p":[]}],"nt":""}]
+}]},{"name":"板栗房间","spots":[{"name":"顶部柜子","bags":[{"id":4,"items":[{"n":"黑色冲锋衣","c":1,"p":[]}],"nt":""}]}]}],"nextBagId":9,"nextPhotoId":1};
+
+// init data
+var D = loadData();
+if (!D.rooms || D.rooms.length === 0) { D = JSON.parse(JSON.stringify(DEFAULT_DATA)); saveData(D); }
+
+// ====== HELPERS ======
+function randId() { return '_' + Math.random().toString(36).substr(2,9); }
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav a').forEach(function(a){a.classList.remove('act')});
+  var navs = document.querySelectorAll('.nav a');
+  var idx = {'overview':0,'admin':1,'qrprint':2}[id]||0;
+  if (navs[idx]) navs[idx].classList.add('act');
+  if (id==='overview') renderOverview();
+  if (id==='admin') renderAdmin();
+  if (id==='qrprint') renderQR();
+}
+
+function modal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+// ====== RENDER OVERVIEW ======
+function renderOverview() {
+  var html = '', total = 0;
+  D.rooms.forEach(function(r) {
+    var spBags = 0;
+    r.spots.forEach(function(s){spBags += s.bags.length});
+    total += spBags;
+    html += '<div class="sec"><div class="r-hdr">🏠 ' + r.name + ' <span class="c">' + spBags + '袋</span></div>';
+    r.spots.forEach(function(s) {
+      html += '<div class="s-hdr">📍 ' + s.name + ' · ' + s.bags.length + '袋</div>';
+      s.bags.forEach(function(b) {
+        var itemsHtml = '';
+        b.items.forEach(function(it) {
+          itemsHtml += '<li><a href="#!" onclick="showBagDetail('+b.id+');return false" style="color:#2c2c2c;text-decoration:none">'+it.n+'</a><span class="ct2">x'+it.c+'</span></li>';
+        });
+        var tot = b.items.reduce(function(a,i){return a+i.c},0);
+        html += '<div class="card"><div class="cd"><div class="ct"><span class="bg">#'+b.id+'</span><span class="vb" onclick="showBagDetail('+b.id+')">查看 →</span></div><div class="dt">共'+tot+'件</div><ul class="il">'+itemsHtml+'</ul>'+(b.nt?'<div class="nt">💬 '+b.nt+'</div>':'')+'</div></div>';
+      });
+    });
+    html += '</div>';
+  });
+  document.getElementById('overviewContent').innerHTML = html || '<div style="text-align:center;padding:40px;color:#999">暂无数据<br><span style="font-size:13px">去「管理」添加房间和袋子</span></div>';
+  document.getElementById('totalBags').textContent = total;
+}
+
+// ====== RENDER ADMIN ======
+function renderAdmin() {
+  var html = '<div class="mb"><button class="btn btn-p" onclick="addRoomForm()">+ 添加房间</button></div>';
+  D.rooms.forEach(function(r, ri) {
+    html += '<div class="card"><div class="cd"><div class="ct"><span style="font-size:16px;font-weight:700;color:#1a3a5a">🏠 '+r.name+'</span><div class="ac">';
+    html += '<button class="btn btn-g btn-sm" onclick="addSpotForm('+ri+')">+ 位置</button>';
+    html += '<button class="btn btn-sm" style="background:#5b7a9a;color:#fff" onclick="editRoomForm('+ri+')">✏️</button>';
+    html += '<button class="btn btn-r btn-sm" onclick="deleteRoom('+ri+')">🗑️</button>';
+    html += '</div></div>';
+    r.spots.forEach(function(s, si) {
+      html += '<div style="margin-top:8px;padding:8px;background:#f8f6f4;border-radius:8px"><div class="ct"><span style="font-weight:600;font-size:13px;color:#555">📍 '+s.name+' <span style="color:#999;font-weight:400">('+s.bags.length+'袋)</span></span><div class="ac">';
+      html += '<button class="btn btn-g btn-sm" onclick="addBagForm('+ri+','+si+')">+ 袋子</button>';
+      html += '<button class="btn btn-sm" style="background:#5b7a9a;color:#fff" onclick="editSpotForm('+ri+','+si+')">✏️</button>';
+      html += '<button class="btn btn-r btn-sm" onclick="deleteSpot('+ri+','+si+')">🗑️</button>';
+      html += '</div></div>';
+      s.bags.forEach(function(b) {
+        var its = b.items.map(function(i){return i.n+'x'+i.c}).join(' ');
+        html += '<div style="font-size:12px;padding:4px 0 4px 12px;border-bottom:1px solid #e8e4e0">#'+b.id+' '+its+' <span class="vb" style="font-size:10px;padding:2px 6px" onclick="showBagDetail('+b.id+')">查看</span></div>';
+      });
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('adminContent').innerHTML = html;
+}
+
+// ====== ROOM CRUD ======
+function addRoomForm() {
+  modal('<h2>添加房间</h2><div class="fg"><label>房间名称</label><input id="inpRoomName" placeholder="如：主卧、板栗房间"></div><div class="fr"><button class="btn btn-g" onclick="doAddRoom()">添加</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');
+  setTimeout(function(){document.getElementById('inpRoomName').focus()},100);
+}
+function doAddRoom() {
+  var n = document.getElementById('inpRoomName').value.trim();
+  if (!n) return;
+  D.rooms.push({name:n,spots:[]});
+  saveData(D); closeModal(); renderAdmin();
+}
+function editRoomForm(ri) {
+  modal('<h2>修改房间</h2><div class="fg"><label>房间名称</label><input id="inpRoomName" value="'+D.rooms[ri].name+'"></div><div class="fr"><button class="btn btn-p" onclick="doEditRoom('+ri+')">保存</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');
+}
+function doEditRoom(ri) {
+  var n = document.getElementById('inpRoomName').value.trim();
+  if (!n) return;
+  D.rooms[ri].name = n; saveData(D); closeModal(); renderAdmin();
+}
+function deleteRoom(ri) {
+  if (!confirm('删除「'+D.rooms[ri].name+'」及其所有位置和袋子？')) return;
+  D.rooms.splice(ri,1); saveData(D); renderAdmin(); renderOverview();
+}
+
+// ====== SPOT CRUD ======
+function addSpotForm(ri) {
+  modal('<h2>添加存放位置</h2><div class="fg"><label>位置名称</label><input id="inpSpotName" placeholder="如：衣柜顶部、床底"></div><div class="fr"><button class="btn btn-g" onclick="doAddSpot('+ri+')">添加</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');
+}
+function doAddSpot(ri) {
+  var n = document.getElementById('inpSpotName').value.trim();
+  if (!n) return;
+  D.rooms[ri].spots.push({name:n,bags:[]});
+  saveData(D); closeModal(); renderAdmin();
+}
+function editSpotForm(ri, si) {
+  modal('<h2>修改位置</h2><div class="fg"><label>位置名称</label><input id="inpSpotName" value="'+D.rooms[ri].spots[si].name+'"></div><div class="fr"><button class="btn btn-p" onclick="doEditSpot('+ri+','+si+')">保存</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');
+}
+function doEditSpot(ri, si) {
+  var n = document.getElementById('inpSpotName').value.trim();
+  if (!n) return;
+  D.rooms[ri].spots[si].name = n; saveData(D); closeModal(); renderAdmin();
+}
+function deleteSpot(ri, si) {
+  if (!confirm('删除此位置及其所有袋子？')) return;
+  D.rooms[ri].spots.splice(si,1); saveData(D); renderAdmin(); renderOverview();
+}
+
+// ====== BAG CRUD ======
+function addBagForm(ri, si) {
+  modal('<h2>添加袋子</h2><div class="fg"><label>衣物清单（每行一件，格式：名称 x数量）</label><textarea id="inpItems" placeholder="羽绒服 x2&#10;毛衣 x3&#10;围巾 x1" style="min-height:70px"></textarea></div><div class="fg"><label>备注（可选）</label><input id="inpNotes" placeholder="如：红色那件"></div><div class="fr"><button class="btn btn-g" onclick="doAddBag('+ri+','+si+')">添加</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');
+}
+function doAddBag(ri, si) {
+  var itemsStr = document.getElementById('inpItems').value.trim();
+  var notes = document.getElementById('inpNotes').value.trim();
+  if (!itemsStr) return;
+  var items = [];
+  itemsStr.split('\n').forEach(function(line) {
+    line = line.trim(); if (!line) return;
+    var m = line.match(/^(.+?)\s*x\s*(\d+)$/i);
+    if (m) items.push({n:m[1].trim(),c:parseInt(m[2]),p:[]});
+    else items.push({n:line,c:1,p:[]});
+  });
+  var bag = {id:D.nextBagId++,items:items,nt:notes};
+  D.rooms[ri].spots[si].bags.push(bag);
+  saveData(D); closeModal(); renderAdmin(); renderOverview();
+}
+function deleteBag(ri, si, bi) {
+  if (!confirm('删除此袋子？')) return;
+  D.rooms[ri].spots[si].bags.splice(bi,1);
+  saveData(D); renderAdmin(); renderOverview();
+}
+
+// ====== BAG DETAIL ======
+function showBagDetail(bagId) {
+  var bag = findBag(bagId);
+  if (!bag) return;
+  var loc = findBagLocation(bagId);
+  var itemsHtml = '', galleryHtml = '', thumbsHtml = '';
+  bag.items.forEach(function(it, idx) {
+    var hp = it.p && it.p.length > 0;
+    itemsHtml += '<tr><td><a href="#!" style="color:#2c2c2c;text-decoration:none;font-weight:600" onclick="showPhoto('+bagId+','+idx+');return false">'+it.n+(hp?' 📸':'')+'</a></td><td style="text-align:center">'+it.c+'</td></tr>';
+    if (hp) {
+      thumbsHtml += '<a href="#!" onclick="showPhoto('+bagId+','+idx+');return false" style="border-radius:6px;overflow:hidden;border:1px solid #e0ddd8;background:#fff;text-decoration:none;display:block"><img src="'+it.p[0]+'" style="width:100%;aspect-ratio:1;object-fit:cover;display:block"><span style="display:block;text-align:center;font-size:10px;color:#555;padding:2px 0">'+it.n+'</span></a>';
+      galleryHtml += '<div id="photo-'+bagId+'-'+idx+'" class="pi"><div style="font-size:12px;font-weight:600;color:#5b7a9a;margin-bottom:4px">📸 '+it.n+' x'+it.c+'</div><img src="'+it.p[0]+'"><span class="pc" onclick="hidePhoto('+bagId+','+idx+')">× 收起</span></div>';
+    }
+  });
+  var tot = bag.items.reduce(function(a,i){return a+i.c},0);
+  modal('<span class="bg">#'+bag.id+'</span><h2 style="margin:6px 0 2px;font-size:18px">🧥 袋子内容</h2><div style="font-size:12px;color:#999;margin-bottom:6px">共'+tot+'件'+(loc?' · 🏠 '+loc.room+' 📍 '+loc.spot:'')+'</div>'+(bag.nt?'<div style="font-size:12px;color:#999;font-style:italic;margin-bottom:6px">💬 '+bag.nt+'</div>':'')+
+  '<table style="width:100%;border-collapse:collapse;margin:8px 0"><tr><th style="text-align:left;padding:6px 4px;border-bottom:2px solid #eee;font-size:13px;color:#666">衣物名称</th><th style="text-align:center;padding:6px 4px;border-bottom:2px solid #eee;font-size:13px;color:#666">数量</th></tr>'+itemsHtml+'</table>'+
+  (thumbsHtml?'<div style="margin-top:10px;padding-top:8px;border-top:2px solid #eee"><h3 style="font-size:14px;color:#555;margin-bottom:6px">📸 衣物照片</h3><div class="pg">'+thumbsHtml+'</div>'+galleryHtml+'</div>':'')+
+  '<div style="margin-top:12px"><button class="btn btn-gy btn-sm" onclick="uploadPhotoForm('+bagId+')">📷 添加照片</button></div>'+
+  '<div class="fr" style="margin-top:10px"><button class="btn btn-p" onclick="closeModal()">关闭</button></div>');
+}
+
+function showPhoto(bagId, idx) {
+  document.querySelectorAll('.pi').forEach(function(p){p.classList.remove('show')});
+  var el = document.getElementById('photo-'+bagId+'-'+idx);
+  if (el) { el.classList.add('show'); setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'center'})},100); }
+}
+function hidePhoto(bagId, idx) {
+  var el = document.getElementById('photo-'+bagId+'-'+idx);
+  if (el) el.classList.remove('show');
+}
+
+function uploadPhotoForm(bagId) {
+  modal('<h2>📷 上传照片</h2><p style="font-size:12px;color:#888;margin-bottom:8px">选择一张衣物照片</p><input type="file" accept="image/*" id="photoFile"><div class="fr" style="margin-top:10px"><button class="btn btn-g" onclick="doUploadPhoto('+bagId+')">上传</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');
+}
+function doUploadPhoto(bagId) {
+  var file = document.getElementById('photoFile').files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    closeModal();
+    // 找到袋子问用户关联哪件衣服
+    var bag = findBag(bagId);
+    if (!bag) return;
+    var names = bag.items.map(function(it,i){return i+': '+it.n});
+    var html = '<h2>关联到哪件衣服？</h2>';
+    bag.items.forEach(function(it,i) {
+      html += '<div style="padding:8px;margin:4px 0;background:#f8f6f4;border-radius:6px;cursor:pointer" onclick="assignPhoto('+bagId+','+i+',\''+e.target.result+'\')">📸 '+it.n+' x'+it.c+'</div>';
+    });
+    html += '<div style="margin-top:8px"><button class="btn btn-gy" onclick="closeModal()">取消</button></div>';
+    modal(html);
+  };
+  reader.readAsDataURL(file);
+}
+function assignPhoto(bagId, itemIdx, dataUrl) {
+  var bag = findBag(bagId);
+  if (bag && bag.items[itemIdx]) {
+    if (!bag.items[itemIdx].p) bag.items[itemIdx].p = [];
+    bag.items[itemIdx].p.push(dataUrl);
+    saveData(D);
+    closeModal();
+    showBagDetail(bagId);
+  }
+}
+
+// ====== FIND HELPERS ======
+function findBag(bagId) {
+  for (var i=0;i<D.rooms.length;i++) {
+    for (var j=0;j<D.rooms[i].spots.length;j++) {
+      for (var k=0;k<D.rooms[i].spots[j].bags.length;k++) {
+        if (D.rooms[i].spots[j].bags[k].id === bagId) return D.rooms[i].spots[j].bags[k];
+      }
+    }
+  }
+  return null;
+}
+function findBagLocation(bagId) {
+  for (var i=0;i<D.rooms.length;i++) {
+    for (var j=0;j<D.rooms[i].spots.length;j++) {
+      for (var k=0;k<D.rooms[i].spots[j].bags.length;k++) {
+        if (D.rooms[i].spots[j].bags[k].id === bagId) return {room:D.rooms[i].name,spot:D.rooms[i].spots[j].name};
+      }
+    }
+  }
+  return null;
+}
+
+// ====== QR CODE ======
+function renderQR() {
+  var html = '';
+  D.rooms.forEach(function(r) {
+    r.spots.forEach(function(s) {
+      s.bags.forEach(function(b) {
+        var its = b.items.map(function(i){return i.n+'x'+i.c}).join('、');
+        html += '<div class="qr-it"><div id="qr-'+b.id+'"></div><div class="ql">#'+b.id+'</div><div class="qs">🏠 '+r.name+' · 📍 '+s.name+'</div><div style="font-size:10px;color:#666;margin-top:2px">'+its+'</div></div>';
+      });
+    });
+  });
+  document.getElementById('qrContent').innerHTML = html || '<div style="text-align:center;padding:40px;color:#999">暂无数据</div>';
+  // Generate QR codes
+  D.rooms.forEach(function(r) {
+    r.spots.forEach(function(s) {
+      s.bags.forEach(function(b) {
+        var el = document.getElementById('qr-'+b.id);
+        if (el) new QRCode(el, {text: window.location.href.split('?')[0] + '?bag=' + b.id, width:100,height:100});
+      });
+    });
+  });
+}
+
+// ====== INIT ======
+renderOverview();
+</script>
+</body>
+</html>
