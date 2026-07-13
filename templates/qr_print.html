@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>打印二维码</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;background:#f5f0eb;color:#2c2c2c;padding:16px;max-width:700px;margin:0 auto 80px}
+.header{text-align:center;padding:20px 0 16px}
+.header h1{font-size:20px;font-weight:700;color:#1a3a5a}
+.qr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.qr-card{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.07);page-break-inside:avoid}
+.qr-card img{width:120px;height:120px;display:block;margin:0 auto 8px}
+.qr-label{font-size:14px;font-weight:700;color:#1a3a5a;margin-bottom:2px}
+.qr-loc{font-size:11px;color:#888;margin-bottom:4px}
+.qr-items{font-size:11px;color:#666}
+.btn{display:inline-block;padding:8px 16px;background:#1a3a5a;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;margin:8px 0}
+@media print{@page{margin:5mm}body{background:#fff;padding:5mm}.qr-card{border:1px dashed #ccc;box-shadow:none}.header,.btn,.top-nav{display:none}}
+.ft{text-align:center;padding:20px 0;font-size:11px;color:#bbb}
+.top-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:700px;margin:0 auto;background:#fff;padding:8px 16px;display:flex;gap:6px;border-top:1px solid #e0ddd8}
+.top-nav a{flex:1;text-align:center;padding:8px 0;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;color:#888}
+.top-nav a.active,.top-nav a:hover{background:#1a3a5a;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🖨️ 打印二维码</h1>
+  <p style="font-size:12px;color:#888;margin-top:4px">裁剪后贴在对应袋子上</p>
+  <a href="#" class="btn" onclick="window.print();return false">🖨️ 打印</a>
+</div>
+
+<div class="qr-grid">
+  {% for bag in bags %}
+  <div class="qr-card">
+    <img src="/static/qrcodes/bag_{{ '%04d' % bag.id }}.png" alt="QR" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect fill=%22%23eee%22 width=%22120%22 height=%22120%22/><text x=%2260%22 y=%2260%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2212%22>暂无</text></svg>'">
+    <div class="qr-label">{{ bag.label or '#'~bag.id }}</div>
+    <div class="qr-loc">🏠 {{ bag.room_name }} · 📍 {{ bag.loc_name }}</div>
+    <div class="qr-items">{{ bag.items_summary or '' }}</div>
+    <a href="/qr/{{ bag.id }}" style="font-size:11px;color:#5b7a9a;text-decoration:none">⬇️ 下载</a>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:40px;color:#999">暂无袋子</div>
+  {% endfor %}
+</div>
+
+<nav class="top-nav">
+  <a href="/">🏠 首页</a>
+  <a href="/rooms">⚙️ 管理</a>
+  <a href="/qr/print" class="active">🖨️ 二维码</a>
+</nav>
+</body>
+</html>

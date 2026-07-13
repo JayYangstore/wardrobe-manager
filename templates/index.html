@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>换季衣物收纳系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#f5f0eb!important;color:#2c2c2c;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;padding:0;margin:0;min-height:100vh}
+body{max-width:700px;margin:0 auto;padding:0 16px 80px}
+.header{text-align:center;padding:24px 0 16px}
+.header h1{font-size:22px;font-weight:700;color:#1a3a5a}
+.stats{color:#999;font-size:12px;margin-top:4px}
+.room-section{margin-bottom:12px}
+.room-header{display:flex;align-items:center;gap:6px;padding:10px 2px 6px;font-size:16px;font-weight:700;color:#1a3a5a;border-bottom:2px solid #d0d8e0;margin-bottom:6px}
+.room-header .count{font-size:12px;color:#999;font-weight:400;margin-left:auto}
+.spot-header{font-size:13px;font-weight:600;color:#666;padding:4px 2px}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:10px}
+.card-body{padding:12px 14px 14px}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.badge{display:inline-block;background:#1a3a5a;color:#fff;font-size:12px;font-weight:700;padding:2px 10px;border-radius:14px}
+.view-btn{font-size:12px;color:#5b7a9a;text-decoration:none;font-weight:600;padding:4px 10px;background:#eef3f8;border-radius:6px}
+.date{color:#999;font-size:11px;margin-bottom:4px}
+.item-list{list-style:none}
+.item-list li{padding:4px 0;font-size:13px;display:flex;justify-content:space-between;border-bottom:1px solid #f0f0f0}
+.item-list li:last-child{border-bottom:none}
+.item-list .count{color:#888;font-size:12px}
+.notes{font-size:11px;color:#999;margin-top:2px}
+.ft{text-align:center;padding:20px 0;font-size:11px;color:#bbb}
+.top-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:700px;margin:0 auto;background:#fff;padding:8px 16px;display:flex;gap:6px;border-top:1px solid #e0ddd8;box-shadow:0 -2px 8px rgba(0,0,0,.05)}
+.top-nav a{flex:1;text-align:center;padding:8px 0;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;color:#888}
+.top-nav a.active,.top-nav a:hover{background:#1a3a5a;color:#fff}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🧥 换季衣物收纳</h1>
+  <div class="stats">共 {{ total_bags }} 袋</div>
+</div>
+{% for room in tree %}
+{% set room_item_count = namespace(val=0) %}
+<div class="room-section">
+  <div class="room-header">🏠 {{ room.name }} <span class="count">{{ room.locations|length }}个位置</span></div>
+  {% for loc in room.locations %}
+    <div class="spot-header">📍 {{ loc.name }} · {{ loc.bags|length }}袋</div>
+    {% for bag in loc.bags %}
+    <div class="card">
+      <div class="card-body">
+        <div class="card-top">
+          <span class="badge">{{ bag.label or '#'~bag.id }}</span>
+          <a class="view-btn" href="/bag/{{ bag.id }}">查看 →</a>
+        </div>
+        <div class="date">📅 {{ bag.created_at }}</div>
+        <ul class="item-list">
+          {% for item in bag["items"] %}
+          <li><a href="/bag/{{ bag.id }}" style="color:#2c2c2c;text-decoration:none">{{ item.name }}</a><span class="count">x{{ item.count }}</span></li>
+          {% endfor %}
+        </ul>
+        {% if bag.notes %}<div class="notes">💬 {{ bag.notes }}</div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% endfor %}
+</div>
+{% else %}
+<div style="text-align:center;padding:40px 0;color:#999">
+  <p>暂无数据</p>
+  <p style="font-size:13px;margin-top:8px">点击下方「管理」开始添加</p>
+</div>
+{% endfor %}
+<div class="ft">有后台 · 自定义位置 · 打印二维码</div>
+<nav class="top-nav">
+  <a href="/" class="active">🏠 首页</a>
+  <a href="/rooms">⚙️ 管理</a>
+  <a href="/qr/print">🖨️ 二维码</a>
+</nav>
+</body>
+</html>

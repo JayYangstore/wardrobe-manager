@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>管理房间</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#f5f0eb!important;color:#2c2c2c;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;padding:0;margin:0;min-height:100vh}
+body{max-width:700px;margin:0 auto;padding:16px 16px 80px}
+.header{text-align:center;padding:10px 0 16px}
+.header h1{font-size:20px;font-weight:700;color:#1a3a5a}
+.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:10px}
+.card-title{font-size:16px;font-weight:700;color:#1a3a5a;margin-bottom:4px}
+.card-sub{font-size:12px;color:#999}
+.btn{display:inline-block;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:#1a3a5a;color:#fff}
+.btn-green{background:#2e7d32;color:#fff}
+.btn-red{background:#c62828;color:#fff}
+.btn-gray{background:#888;color:#fff}
+.btn-sm{padding:3px 8px;font-size:11px}
+.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.form-inline{display:flex;gap:6px;margin-top:12px}
+.form-inline input{flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:14px}
+.ft{text-align:center;padding:20px 0;font-size:11px;color:#bbb}
+.top-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:700px;margin:0 auto;background:#fff;padding:8px 16px;display:flex;gap:6px;border-top:1px solid #e0ddd8}
+.top-nav a{flex:1;text-align:center;padding:8px 0;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;color:#888}
+.top-nav a.active,.top-nav a:hover{background:#1a3a5a;color:#fff}
+.flash{padding:8px 12px;border-radius:8px;margin:8px 0;font-size:12px}
+.flash.error{background:#ffebee;color:#c62828}
+</style>
+</head>
+<body>
+
+<div class="header"><h1>⚙️ 管理 · 房间</h1></div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}{% for cat, msg in messages %}
+<div class="flash {{ cat }}">{{ msg }}</div>
+{% endfor %}{% endif %}
+{% endwith %}
+
+<div class="card">
+  <div class="card-title">添加房间</div>
+  <form method="POST" action="/rooms/add" class="form-inline">
+    <input name="name" placeholder="输入房间名称，如：主卧、板栗房间" required>
+    <button class="btn btn-primary">添加</button>
+  </form>
+</div>
+
+{% for room in rooms %}
+<div class="card">
+  <div class="card-title">🏠 {{ room.name }}</div>
+  <div class="card-sub">{{ room.loc_count }} 个存放位置</div>
+  <div class="actions">
+    <a href="/locations/{{ room.id }}" class="btn btn-green btn-sm">查看位置</a>
+    <a href="/rooms/edit/{{ room.id }}" class="btn btn-gray btn-sm" onclick="var n=prompt('修改房间名称','{{ room.name }}');if(n){fetch(this.href,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'name='+encodeURIComponent(n)}).then(()=>location.reload())}return false">✏️ 改名称</a>
+    <a href="/rooms/delete/{{ room.id }}" class="btn btn-red btn-sm" onclick="return confirm('删除「{{ room.name }}」及其所有位置和袋子？')">🗑️ 删除</a>
+  </div>
+</div>
+{% endfor %}
+
+<div class="ft">共 {{ rooms|length }} 个房间</div>
+
+<nav class="top-nav">
+  <a href="/">🏠 首页</a>
+  <a href="/rooms" class="active">⚙️ 管理</a>
+  <a href="/qr/print">🖨️ 二维码</a>
+</nav>
+</body>
+</html>

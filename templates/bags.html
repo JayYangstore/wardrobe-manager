@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>管理袋子</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#f5f0eb!important;color:#2c2c2c;font-family:-apple-system,"PingFang SC","Noto Sans SC",sans-serif;padding:0;margin:0;min-height:100vh}
+body{max-width:700px;margin:0 auto;padding:16px 16px 80px}
+.header{text-align:center;padding:10px 0 16px}
+.header h1{font-size:20px;font-weight:700;color:#1a3a5a}
+.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-bottom:10px}
+.card-title{font-size:16px;font-weight:700;color:#1a3a5a;margin-bottom:4px}
+.card-sub{font-size:12px;color:#999}
+.badge{display:inline-block;background:#1a3a5a;color:#fff;font-size:12px;font-weight:700;padding:2px 10px;border-radius:14px;margin-bottom:6px}
+.btn{display:inline-block;padding:6px 12px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:#1a3a5a;color:#fff}
+.btn-green{background:#2e7d32;color:#fff}
+.btn-red{background:#c62828;color:#fff}
+.btn-sm{padding:3px 8px;font-size:11px}
+.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.item-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px solid #f0f0f0}
+.back-link{display:inline-block;margin-bottom:12px;color:#5b7a9a;text-decoration:none;font-size:13px}
+.form-group{margin-bottom:10px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:4px}
+.form-group input,.form-group textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:14px;font-family:inherit}
+.form-group textarea{min-height:60px}
+.ft{text-align:center;padding:20px 0;font-size:11px;color:#bbb}
+.top-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:700px;margin:0 auto;background:#fff;padding:8px 16px;display:flex;gap:6px;border-top:1px solid #e0ddd8}
+.top-nav a{flex:1;text-align:center;padding:8px 0;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;color:#888}
+.top-nav a.active,.top-nav a:hover{background:#1a3a5a;color:#fff}
+</style>
+</head>
+<body>
+
+<a href="/locations/{{ loc.room_id }}" class="back-link">← 返回位置列表</a>
+
+<div class="header"><h1>📦 {{ loc.room_name }} · {{ loc.name }}</h1></div>
+
+<div class="card">
+  <div class="card-title">添加新袋子</div>
+  <form method="POST" action="/bags/add">
+    <input type="hidden" name="loc_id" value="{{ loc.id }}">
+    <div class="form-group"><label>袋子编号（可选）</label><input name="label" placeholder="如：袋1、A-001"></div>
+    <div class="form-group"><label>衣物清单（每行一件，格式：名称 x数量）</label><textarea name="items" placeholder="羽绒服 x2&#10;毛衣 x3&#10;围巾 x1"></textarea></div>
+    <div class="form-group"><label>备注（可选）</label><input name="notes" placeholder="如：红色那件"></div>
+    <button class="btn btn-primary">添加袋子</button>
+  </form>
+</div>
+
+{% for bag in bags %}
+<div class="card">
+  <span class="badge">{{ bag.label or '#'~bag.id }}</span>
+  <div class="card-sub">📅 添加于 {{ bag.created_at }}</div>
+  {% for item in bag["items"] %}
+  <div class="item-row"><span>{{ item.name }}</span><span>x{{ item.count }}</span></div>
+  {% endfor %}
+  {% if bag.notes %}<div style="font-size:11px;color:#999;margin-top:4px">💬 {{ bag.notes }}</div>{% endif %}
+  <div class="actions">
+    <a href="/bag/{{ bag.id }}" class="btn btn-green btn-sm">查看</a>
+    <a href="/qr/{{ bag.id }}" class="btn btn-sm" style="background:#5b7a9a;color:#fff">下载二维码</a>
+    <a href="/bags/delete/{{ bag.id }}" class="btn btn-red btn-sm" onclick="return confirm('删除此袋子及其所有物品？')">🗑️ 删除</a>
+  </div>
+</div>
+{% else %}
+<div style="text-align:center;padding:20px;color:#999">暂无袋子，在上方添加</div>
+{% endfor %}
+
+<nav class="top-nav">
+  <a href="/">🏠 首页</a>
+  <a href="/rooms" class="active">⚙️ 管理</a>
+  <a href="/qr/print">🖨️ 二维码</a>
+</nav>
+</body>
+</html>
