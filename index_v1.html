@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>换季衣物收纳</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#f5f0eb;--card:#fff;--primary:#1a3a5a;--accent:#5b7a9a;--text:#2c2c2c;--muted:#888;--border:rgba(0,0,0,.06);--shadow:0 1px 3px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text);font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;min-height:100vh}
+body{display:flex;max-width:900px;margin:0 auto;min-height:100vh}
+/* ===== 侧栏 ===== */
+.sidebar{width:56px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;position:sticky;top:0;height:100vh;z-index:100}
+.side-logo{font-size:22px;margin-bottom:12px;cursor:default}
+.side-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:18px;cursor:pointer;color:var(--muted);transition:all .15s;position:relative;text-decoration:none;border:none;background:none}
+.side-btn:hover{background:rgba(26,58,90,.06);color:var(--primary)}
+.side-btn.act{background:var(--primary);color:#fff}
+.side-btn .tip{position:absolute;left:48px;top:50%;transform:translateY(-50%);background:#323232;color:#fff;font-size:11px;padding:4px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:999}
+.side-btn:hover .tip{opacity:1}
+.side-spacer{flex:1}
+/* ===== 内容 ===== */
+.main{flex:1;padding:20px 24px 80px;overflow-y:auto;min-height:100vh}
+.page{display:none}.page.act{display:block}
+.hdr{margin-bottom:20px}
+.hdr h1{font-size:20px;font-weight:600;color:var(--primary);letter-spacing:-.3px}
+.hdr .sub{font-size:12px;color:var(--muted);margin-top:2px}
+/* ===== 首页卡片 ===== */
+.r-sec{margin-bottom:16px}
+.r-hdr{display:flex;align-items:center;gap:6px;padding:8px 0;font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;user-select:none;border-bottom:1.5px solid var(--border);margin-bottom:8px}
+.r-hdr .arr{font-size:9px;color:#bbb;transition:transform .2s;display:inline-block}
+.r-hdr .arr.o{transform:rotate(90deg)}
+.r-hdr .c{font-size:11px;color:var(--muted);font-weight:400;margin-left:auto}
+.r-body{padding-left:0}
+.r-body.collapsed{display:none}
+.s-hdr{font-size:12px;font-weight:500;color:var(--muted);padding:4px 0;margin-top:4px}
+.card{background:var(--card);border-radius:10px;box-shadow:var(--shadow);margin-bottom:8px;border:1px solid var(--border)}
+.cd{padding:10px 12px 12px}
+.ct{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.bg{display:inline-block;background:var(--primary);color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.2px}
+.vb{font-size:11px;color:var(--accent);font-weight:500;padding:3px 8px;background:#eef3f8;border-radius:6px;cursor:pointer}
+.dt{color:var(--muted);font-size:10px}
+.il{list-style:none}
+.il li{padding:3px 0;font-size:12px;display:flex;justify-content:space-between;border-bottom:1px solid var(--border)}
+.il li:last-child{border-bottom:none}
+.il .c2{color:var(--muted);font-size:11px}
+.nt{font-size:10px;color:var(--muted);margin-top:2px}
+/* ===== 管理 ===== */
+.adm-s{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);margin-bottom:12px}
+.adm-rh{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:#faf8f6}
+.adm-rh .n{font-size:14px;font-weight:600;color:var(--primary)}
+.adm-sh{padding:8px 14px 4px 14px;display:flex;justify-content:space-between;align-items:center}
+.adm-sh .n{font-size:12px;font-weight:500;color:#555}
+.adm-b{padding:5px 0 5px 16px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#555;border-bottom:1px solid var(--border)}
+.adm-b:last-child{border-bottom:none}
+.adm-b .id{color:var(--primary);font-weight:600}
+/* ===== 按钮 ===== */
+.btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:500;border:none;cursor:pointer;color:#fff;transition:all .15s}
+.btn-p{background:var(--primary)}.btn-g{background:#2e7d32}.btn-r{background:#c62828}.btn-gy{background:#888}.btn-o{background:#e8a020}
+.btn-sm{padding:4px 10px;font-size:11px}
+.btn-ic{width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:none;cursor:pointer;font-size:14px;background:none;color:var(--muted);transition:all .12s}
+.btn-ic:hover{background:rgba(0,0,0,.05);color:var(--primary)}
+.btn-ic.r:hover{background:#fce4e4;color:#c62828}
+.ac{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+/* ===== 表单 ===== */
+.fg{margin-bottom:8px}
+.fg label{display:block;font-size:11px;font-weight:500;color:#666;margin-bottom:3px}
+.fg input,.fg textarea,.fg select{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:inherit;background:var(--card);color:var(--text)}
+.fg textarea{min-height:50px;resize:vertical}
+.fr{display:flex;gap:6px}.fr>*{flex:1}
+/* ===== 模态框 ===== */
+.md{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;background:rgba(0,0,0,.3)}
+.md.show{display:flex;align-items:center;justify-content:center}
+.mc{background:var(--card);border-radius:14px;padding:20px;width:92%;max-width:420px;max-height:85vh;overflow-y:auto;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.mc h2{font-size:15px;margin-bottom:10px;color:var(--primary);font-weight:600}
+/* ===== 照片 ===== */
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.pg a{border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--card);text-decoration:none;display:block}
+.pg img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.pg .pl{display:block;text-align:center;font-size:10px;color:#555;padding:2px 0}
+.pi{border:2px solid transparent;border-radius:10px;padding:8px;margin:8px 0;display:none}
+.pi.show{display:block}.pi img{width:100%;border-radius:8px}
+.pi .pc{display:inline-block;margin:4px 4px 0 0;padding:4px 12px;background:#e8ecf0;color:#555;border-radius:6px;font-size:11px;cursor:pointer}
+.pi .pd{display:inline-block;margin:4px 0 0;padding:4px 12px;background:#fce4e4;color:#c62828;border-radius:6px;font-size:11px;cursor:pointer}
+/* 上传选择物品高亮 */
+.item-opt{padding:8px 10px;margin:3px 0;background:#f8f6f4;border-radius:7px;cursor:pointer;font-size:13px;border:2px solid transparent;transition:all .12s}
+.item-opt:hover{background:#eef3f8}
+.item-opt.sel{border-color:var(--primary);background:#e8edf3;font-weight:600}
+/* ===== 二维码 ===== */
+.qr-g{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.qr-i{background:var(--card);border-radius:10px;padding:12px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border)}
+.qr-i .ql{font-size:12px;font-weight:600;color:var(--primary)}
+.qr-i .qs{font-size:10px;color:var(--muted)}
+/* ===== 设置 ===== */
+.st-c{background:var(--card);border-radius:10px;padding:14px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:8px}
+.st-c .t{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:3px}
+.st-c .d{font-size:11px;color:var(--muted);margin-bottom:6px}
+/* ===== Toast ===== */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#323232;color:#fff;padding:8px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+/* ===== 响应式 ===== */
+@media(max-width:640px){.sidebar{width:100%;height:48px;flex-direction:row;padding:0 8px;position:fixed;bottom:0;top:auto;border-right:none;border-top:1px solid var(--border);gap:0}.side-logo{display:none}.side-spacer{display:none}.side-btn{width:25%;height:44px;border-radius:0;font-size:16px}.side-btn.act{background:none;color:var(--primary);border-top:2px solid var(--primary)}.side-btn .tip{display:none}.main{padding:16px 16px 64px}}
+@media print{@page{margin:4mm}body{background:#fff;padding:4mm}.sidebar,.hdr{display:none}.qr-i{border:1px dashed #ccc;box-shadow:none}}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- 侧栏 -->
+<nav class="sidebar" id="sideBar">
+  <div class="side-logo">🧥</div>
+  <button class="side-btn act" onclick="showPage('overview')" title="首页">🏠<span class="tip">首页</span></button>
+  <button class="side-btn" onclick="showPage('admin')" title="管理">⚙️<span class="tip">管理</span></button>
+  <button class="side-btn" onclick="showPage('qrprint')" title="二维码">🖨️<span class="tip">二维码</span></button>
+  <button class="side-btn" onclick="showPage('settings')" title="设置">⚡<span class="tip">设置</span></button>
+  <div class="side-spacer"></div>
+</nav>
+
+<!-- 内容 -->
+<div class="main">
+
+<div id="page-overview" class="page act">
+  <div class="hdr"><h1>衣物收纳</h1><div class="sub">共 <span id="totalBags">0</span> 袋 · 点击名称查看照片</div></div>
+  <div id="overviewContent"></div>
+</div>
+
+<div id="page-admin" class="page">
+  <div class="hdr"><h1>管理</h1></div>
+  <div style="margin-bottom:12px"><button class="btn btn-p" onclick="addRoomForm()">+ 添加房间</button></div>
+  <div id="adminContent"></div>
+</div>
+
+<div id="page-qrprint" class="page">
+  <div class="hdr"><h1>二维码</h1><div class="sub">裁剪后贴袋子上 · 扫码直达袋子详情</div></div>
+  <button class="btn btn-p" onclick="window.print()" style="margin-bottom:14px">🖨️ 打印全部</button>
+  <div id="qrContent" class="qr-g"></div>
+</div>
+
+<div id="page-settings" class="page">
+  <div class="hdr"><h1>设置</h1></div>
+  <div id="settingsContent"></div>
+</div>
+
+</div>
+
+<div id="modal" class="md"><div class="mc" id="modalContent"></div></div>
+
+<script>
+// ====== DATA ======
+function loadData(){var r=localStorage.getItem('wd');return r?JSON.parse(r):{rooms:[],nextBagId:1}}
+function saveData(d){localStorage.setItem('wd',JSON.stringify(d))}
+var D=loadData();
+if(!D.rooms||!D.rooms.length)D=JSON.parse(JSON.stringify({"rooms":[
+{"n":"主卧","sp":[{"n":"衣柜顶部","b":[
+{"id":1,"l":"","is":[{"n":"羽绒服","c":2,"p":["photo_jacket.jpg"]},{"n":"加绒卫衣","c":3,"p":["photo_pants.jpg"]},{"n":"厚棉袜","c":5,"p":[]},{"n":"围巾","c":2,"p":[]}],"nt":"红色羽绒服+黑色羽绒服"},
+{"id":2,"l":"","is":[{"n":"秋衣秋裤套装","c":3,"p":[]},{"n":"羊毛衫","c":2,"p":["photo_jacket.jpg"]},{"n":"保暖背心","c":2,"p":[]}],"nt":""}]},
+{"n":"床底","b":[{"id":3,"l":"","is":[{"n":"厚外套","c":1,"p":["photo_jacket.jpg"]},{"n":"呢子大衣","c":1,"p":["photo_pants.jpg"]},{"n":"皮手套","c":1,"p":[]},{"n":"毛线帽","c":2,"p":[]},{"n":"厚围巾","c":1,"p":[]}],"nt":"厚外套是卡其色的"}]},
+{"n":"床头柜","b":[{"id":8,"l":"","is":[{"n":"床单","c":3,"p":[]},{"n":"被套","c":2,"p":[]},{"n":"枕头","c":2,"p":[]}],"nt":"备用床上用品"}]}]},
+{"n":"妞妞房间","sp":[{"n":"床底","b":[{"id":5,"l":"","is":[{"n":"黑色滑雪裤","c":1,"p":["photo_pants.jpg"]},{"n":"黑色外套","c":1,"p":["photo_jacket.jpg"]},{"n":"紫色衣服","c":1,"p":["photo_pants.jpg"]}],"nt":""}]},
+{"n":"顶部柜子","b":[{"id":6,"l":"","is":[{"n":"夏季短袖","c":4,"p":[]},{"n":"薄款长裤","c":3,"p":[]},{"n":"防晒衣","c":2,"p":[]}],"nt":"夏装暂存"}]},
+{"n":"床头衣柜","b":[{"id":7,"l":"","is":[{"n":"毛巾被","c":2,"p":[]},{"n":"薄被子","c":1,"p":[]},{"n":"枕套","c":4,"p":[]}],"nt":""}]}]},
+{"n":"板栗房间","sp":[{"n":"顶部柜子","b":[{"id":4,"l":"","is":[{"n":"黑色冲锋衣","c":1,"p":["photo_jacket.jpg"]}],"nt":"测试照片"}]}]}],"nextBagId":9}));saveData(D);
+
+function toast(m){var e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(function(){e.classList.remove('show')},2200)}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('act')});
+  document.getElementById('page-'+id).classList.add('act');
+  document.querySelectorAll('.side-btn').forEach(function(b,i){b.classList.toggle('act',['overview','admin','qrprint','settings'].indexOf(id)===i)});
+  if(id==='overview')renderOverview();if(id==='admin')renderAdmin();if(id==='qrprint')renderQR();if(id==='settings')renderSettings()
+}
+
+function modal(h){document.getElementById('modalContent').innerHTML=h;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+// ====== OVERVIEW ======
+function renderOverview(){
+  var h='',t=0;
+  D.rooms.forEach(function(r,ri){
+    var sb=0;r.sp.forEach(function(s){sb+=s.b.length});t+=sb;
+    h+='<div class="r-sec"><div class="r-hdr" onclick="toggleR('+ri+')"><span class="arr o" id="arr-'+ri+'">▶</span> '+r.n+' <span class="c">'+sb+'袋</span></div><div class="r-body" id="rb-'+ri+'">';
+    r.sp.forEach(function(s){
+      h+='<div class="s-hdr">📍 '+s.n+' · '+s.b.length+'袋</div>';
+      s.b.forEach(function(b){
+        var ih='',tot=0;
+        b.is.forEach(function(it){tot+=it.c;var hp=it.p&&it.p.length?' 📸':'';ih+='<li><a href="#!" onclick="showBagD('+b.id+');return false" style="color:var(--text);text-decoration:none">'+it.n+hp+'</a><span class="c2">x'+it.c+'</span></li>'});
+        h+='<div class="card"><div class="cd"><div class="ct"><span class="bg">'+(b.l||'#'+b.id)+'</span><span class="vb" onclick="showBagD('+b.id+')">查看 →</span></div><div class="dt">共'+tot+'件</div><ul class="il">'+ih+'</ul>'+(b.nt?'<div class="nt">💬 '+b.nt+'</div>':'')+'</div></div>'
+      })
+    });
+    h+='</div></div>'
+  });
+  document.getElementById('overviewContent').innerHTML=h||'<div style="text-align:center;padding:40px;color:var(--muted)">暂无数据，去「管理」添加</div>';
+  document.getElementById('totalBags').textContent=t
+}
+function toggleR(ri){var b=document.getElementById('rb-'+ri),a=document.getElementById('arr-'+ri);if(b&&a){b.classList.toggle('collapsed');a.classList.toggle('o')}}
+
+// ====== ADMIN ======
+function renderAdmin(){
+  var h='';
+  D.rooms.forEach(function(r,ri){
+    h+='<div class="adm-s"><div class="adm-rh"><span class="n">'+r.n+'</span><div class="ac">';
+    h+='<button class="btn btn-g btn-sm" onclick="addSpotF('+ri+')">+ 位置</button>';
+    h+='<button class="btn-ic" onclick="editRoomF('+ri+')" title="改名称">✏️</button>';
+    h+='<button class="btn-ic r" onclick="deleteRoom('+ri+')" title="删除房间">🗑️</button>';
+    h+='</div></div>';
+    r.sp.forEach(function(s,si){
+      h+='<div class="adm-sh"><span class="n">📍 '+s.n+' ('+s.b.length+'袋)</span><div class="ac">';
+      h+='<button class="btn btn-g btn-sm" onclick="addBagF('+ri+','+si+')">+ 袋子</button>';
+      h+='<button class="btn-ic" onclick="editSpotF('+ri+','+si+')" title="改名称">✏️</button>';
+      h+='<button class="btn-ic r" onclick="deleteSpot('+ri+','+si+')" title="删除位置">🗑️</button>';
+      h+='</div></div>';
+      s.b.forEach(function(b,bi){
+        var its=b.is.map(function(i){return i.n+'x'+i.c}).join(' · ');
+        h+='<div class="adm-b"><span><span class="id">'+(b.l||'#'+b.id)+'</span> '+its+'</span><div class="ac">';
+        h+='<button class="btn-ic" onclick="showBagD('+b.id+')" title="查看">👁️</button>';
+        h+='<button class="btn-ic" onclick="editBagF('+ri+','+si+','+bi+')" title="编辑">✏️</button>';
+        h+='<button class="btn-ic r" onclick="deleteBagC('+ri+','+si+','+bi+')" title="删除">🗑️</button>';
+        h+='</div></div>'
+      })
+    });
+    h+='</div>'
+  });
+  document.getElementById('adminContent').innerHTML=h
+}
+
+// ====== CRUD ======
+function addRoomForm(){modal('<h2>添加房间</h2><div class="fg"><label>房间名称</label><input id="irn" placeholder="如：主卧、板栗房间"></div><div class="fr"><button class="btn btn-g" onclick="doAddRoom()">确认添加</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>');setTimeout(function(){var e=document.getElementById('irn');if(e)e.focus()},100)}
+function doAddRoom(){var n=document.getElementById('irn').value.trim();if(!n)return toast('请输入房间名称');D.rooms.push({n:n,sp:[]});saveData(D);closeModal();renderAdmin();renderOverview();toast('✅ 已添加')}
+function editRoomF(ri){modal('<h2>修改房间名称</h2><div class="fg"><label>房间名称</label><input id="irn" value="'+D.rooms[ri].n+'"></div><div class="fr"><button class="btn btn-p" onclick="doEditRoom('+ri+')">保存</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>')}
+function doEditRoom(ri){var n=document.getElementById('irn').value.trim();if(!n)return toast('请输入房间名称');D.rooms[ri].n=n;saveData(D);closeModal();renderAdmin();renderOverview();toast('✅ 已更新')}
+function deleteRoom(ri){if(!confirm('确定删除「'+D.rooms[ri].n+'」及其所有位置和袋子？'))return;D.rooms.splice(ri,1);saveData(D);renderAdmin();renderOverview();toast('🗑️ 已删除')}
+
+function addSpotF(ri){modal('<h2>添加存放位置</h2><div class="fg"><label>位置名称</label><input id="isn" placeholder="如：衣柜顶部、床底"></div><div class="fr"><button class="btn btn-g" onclick="doAddSpot('+ri+')">确认添加</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>')}
+function doAddSpot(ri){var n=document.getElementById('isn').value.trim();if(!n)return toast('请输入位置名称');D.rooms[ri].sp.push({n:n,b:[]});saveData(D);closeModal();renderAdmin();toast('✅ 已添加')}
+function editSpotF(ri,si){modal('<h2>修改位置名称</h2><div class="fg"><label>位置名称</label><input id="isn" value="'+D.rooms[ri].sp[si].n+'"></div><div class="fr"><button class="btn btn-p" onclick="doEditSpot('+ri+','+si+')">保存</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>')}
+function doEditSpot(ri,si){var n=document.getElementById('isn').value.trim();if(!n)return toast('请输入位置名称');D.rooms[ri].sp[si].n=n;saveData(D);closeModal();renderAdmin();toast('✅ 已更新')}
+function deleteSpot(ri,si){if(!confirm('确定删除此位置及其所有袋子？'))return;D.rooms[ri].sp.splice(si,1);saveData(D);renderAdmin();renderOverview();toast('🗑️ 已删除')}
+
+function addBagF(ri,si){modal('<h2>添加袋子</h2><div class="fg"><label>编号（可选，留空自动）</label><input id="ibl" placeholder="如：冬季衣物-1"></div><div class="fg"><label>衣物清单（每行一件，名称 x数量）</label><textarea id="ibi" placeholder="羽绒服 x2&#10;毛衣 x3" style="min-height:50px"></textarea></div><div class="fg"><label>备注（可选）</label><input id="ibn" placeholder="如：红色那件"></div><div class="fr"><button class="btn btn-g" onclick="doAddBag('+ri+','+si+')">确认添加</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>')}
+function doAddBag(ri,si){var s=document.getElementById('ibi').value.trim(),nt=document.getElementById('ibn').value.trim(),l=document.getElementById('ibl').value.trim();if(!s)return toast('请输入衣物清单');var is=[];s.split('\n').forEach(function(l){l=l.trim();if(!l)return;var m=l.match(/^(.+?)\s*x\s*(\d+)$/i);if(m)is.push({n:m[1].trim(),c:parseInt(m[2]),p:[]});else is.push({n:l,c:1,p:[]})});D.rooms[ri].sp[si].b.push({id:D.nextBagId++,l:l,is:is,nt:nt});saveData(D);closeModal();renderAdmin();renderOverview();toast('✅ 已添加')}
+function editBagF(ri,si,bi){var b=D.rooms[ri].sp[si].b[bi],s=b.is.map(function(i){return i.n+' x'+i.c}).join('\n');modal('<h2>编辑袋子</h2><div class="fg"><label>编号</label><input id="ibl" value="'+(b.l||'')+'" placeholder="留空显示编号"></div><div class="fg"><label>衣物清单</label><textarea id="ibi" style="min-height:50px">'+s+'</textarea></div><div class="fg"><label>备注</label><input id="ibn" value="'+(b.nt||'')+'"></div><div class="fr"><button class="btn btn-p" onclick="doEditBag('+ri+','+si+','+bi+')">保存</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>')}
+function doEditBag(ri,si,bi){var s=document.getElementById('ibi').value.trim(),nt=document.getElementById('ibn').value.trim(),l=document.getElementById('ibl').value.trim();if(!s)return toast('请输入衣物清单');var is=[];s.split('\n').forEach(function(ln){ln=ln.trim();if(!ln)return;var m=ln.match(/^(.+?)\s*x\s*(\d+)$/i);if(m)is.push({n:m[1].trim(),c:parseInt(m[2]),p:[]});else is.push({n:ln,c:1,p:[]})});D.rooms[ri].sp[si].b[bi].is=is;D.rooms[ri].sp[si].b[bi].nt=nt;D.rooms[ri].sp[si].b[bi].l=l;saveData(D);closeModal();renderAdmin();toast('✅ 已更新')}
+function deleteBagC(ri,si,bi){var b=D.rooms[ri].sp[si].b[bi];if(!confirm('确定删除「'+(b.l||'#'+b.id)+'」？'))return;D.rooms[ri].sp[si].b.splice(bi,1);saveData(D);renderAdmin();renderOverview();toast('🗑️ 已删除')}
+
+// ====== BAG DETAIL ======
+function showBagD(bid){var b=findB(bid);if(!b)return toast('找不到袋子');var loc=findBL(bid),ih='',gh='',th='';
+  b.is.forEach(function(it,idx){var hp=it.p&&it.p.length>0;ih+='<tr><td><a href="#!" style="color:var(--text);text-decoration:none;font-weight:500" onclick="showP('+bid+','+idx+');return false">'+it.n+(hp?' 📸':'')+'</a></td><td style="text-align:center">'+it.c+'</td></td></tr>';
+    if(hp){th+='<a href="#!" onclick="showP('+bid+','+idx+');return false" style="border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--card);text-decoration:none;display:block"><img src="'+it.p[0]+'" style="width:100%;aspect-ratio:1;object-fit:cover;display:block"><span style="display:block;text-align:center;font-size:10px;color:#555;padding:2px 0">'+it.n+'</span></a>';
+      gh+='<div id="p-'+bid+'-'+idx+'" class="pi"><div style="font-size:12px;font-weight:500;color:var(--accent);margin-bottom:4px">📸 '+it.n+' x'+it.c+'</div><img src="'+it.p[0]+'"><span class="pc" onclick="hideP('+bid+','+idx+')">× 收起</span><span class="pd" onclick="deletePhoto('+bid+','+idx+')">🗑️ 删除</span></div>'}
+  });
+  var tot=b.is.reduce(function(a,i){return a+i.c},0);
+  modal('<span class="bg">'+(b.l||'#'+b.id)+'</span><h2 style="margin:6px 0 2px;font-size:16px;font-weight:600">🧥 '+(b.l||'袋子')+'内容</h2><div style="font-size:11px;color:var(--muted);margin-bottom:4px">共'+tot+'件'+(loc?' · '+loc.r+' › '+loc.s:'')+'</div>'+(b.nt?'<div style="font-size:11px;color:var(--muted);font-style:italic;margin-bottom:4px">💬 '+b.nt+'</div>':'')+
+  '<table style="width:100%;border-collapse:collapse;margin:8px 0"><tr><th style="text-align:left;padding:6px 4px;border-bottom:2px solid var(--border);font-size:12px;color:var(--muted)">衣物名称</th><th style="text-align:center;padding:6px 4px;border-bottom:2px solid var(--border);font-size:12px;color:var(--muted)">数量</th></tr>'+ih+'</table>'+
+  (th?'<div style="margin-top:8px;padding-top:8px;border-top:2px solid var(--border)"><h3 style="font-size:13px;color:#555;margin-bottom:6px;font-weight:500">📸 衣物照片</h3><div class="pg">'+th+'</div>'+gh+'</div>':'')+
+  '<div class="ac" style="margin-top:10px"><button class="btn btn-g btn-sm" onclick="uploadF('+bid+')">📷 添加照片</button></div>'+
+  '<div class="fr" style="margin-top:10px"><button class="btn btn-p" onclick="closeModal()">关闭</button></div>')
+}
+
+function showP(bid,idx){document.querySelectorAll('.pi').forEach(function(p){p.classList.remove('show')});var e=document.getElementById('p-'+bid+'-'+idx);if(e){e.classList.add('show');setTimeout(function(){e.scrollIntoView({behavior:'smooth',block:'center'})},100)}}
+function hideP(bid,idx){var e=document.getElementById('p-'+bid+'-'+idx);if(e)e.classList.remove('show')}
+function deletePhoto(bid,idx){if(!confirm('确定删除这张照片？'))return;var b=findB(bid);if(b&&b.is[idx]){b.is[idx].p=[];saveData(D);closeModal();toast('🗑️ 照片已删除');setTimeout(function(){showBagD(bid)},300)}}
+
+function uploadF(bid){var b=findB(bid);if(!b)return;
+  var nh='<input type="file" accept="image/*" id="pf" style="margin-bottom:10px;display:block"><div style="font-size:12px;font-weight:500;color:#555;margin-bottom:6px">关联到哪件衣服？</div>';
+  b.is.forEach(function(it,i){nh+='<div class="item-opt" id="io-'+i+'" onclick="selItem('+i+')">📸 '+it.n+' x'+it.c+'</div>'});
+  nh+='<div class="fr" style="margin-top:10px"><button class="btn btn-g" id="cfBtn" onclick="doUpload('+bid+')" disabled>确认上传</button><button class="btn btn-gy" onclick="closeModal()">取消</button></div>';
+  modal('<h2>📷 添加照片</h2>'+nh);window._selIdx=-1}
+function selItem(i){document.querySelectorAll('.item-opt').forEach(function(e){e.classList.remove('sel')});document.getElementById('io-'+i).classList.add('sel');window._selIdx=i;document.getElementById('cfBtn').disabled=false}
+function doUpload(bid){var f=document.getElementById('pf').files[0];if(!f)return toast('请先选择图片');var idx=window._selIdx;if(idx<0)return toast('请先选择要关联的衣物');
+  var r=new FileReader();r.onload=function(e){var b=findB(bid);if(b&&b.is[idx]){if(!b.is[idx].p)b.is[idx].p=[];b.is[idx].p.push(e.target.result);saveData(D);closeModal();toast('✅ 照片已添加到「'+b.is[idx].n+'」');setTimeout(function(){showBagD(bid)},400)}};r.readAsDataURL(f)}
+
+// ====== HELPERS ======
+function findB(bid){for(var i=0;i<D.rooms.length;i++)for(var j=0;j<D.rooms[i].sp.length;j++)for(var k=0;k<D.rooms[i].sp[j].b.length;k++)if(D.rooms[i].sp[j].b[k].id===bid)return D.rooms[i].sp[j].b[k];return null}
+function findBL(bid){for(var i=0;i<D.rooms.length;i++)for(var j=0;j<D.rooms[i].sp.length;j++)for(var k=0;k<D.rooms[i].sp[j].b.length;k++)if(D.rooms[i].sp[j].b[k].id===bid)return{r:D.rooms[i].n,s:D.rooms[i].sp[j].n};return null}
+
+// ====== QR ======
+function renderQR(){var h='',base=window.location.href.split('?')[0].split('#')[0];
+  D.rooms.forEach(function(r){r.sp.forEach(function(s){s.b.forEach(function(b){var its=b.is.map(function(i){return i.n+'x'+i.c}).join('、');
+    h+='<div class="qr-i"><div id="qr-'+b.id+'" style="display:flex;justify-content:center"></div><div class="ql">'+(b.l||'#'+b.id)+'</div><div class="qs">'+r.n+' › '+s.n+'</div><div style="font-size:9px;color:#666;margin-top:2px">'+its+'</div></div>'})})});
+  document.getElementById('qrContent').innerHTML=h||'<div style="text-align:center;padding:40px;color:var(--muted)">暂无数据</div>';
+  D.rooms.forEach(function(r){r.sp.forEach(function(s){s.b.forEach(function(b){var el=document.getElementById('qr-'+b.id);if(el)new QRCode(el,{text:base+'?bag='+b.id,width:90,height:90})})})})}
+
+// ====== SETTINGS ======
+function renderSettings(){document.getElementById('settingsContent').innerHTML=
+  '<div class="st-c"><div class="t">💾 数据存储</div><div class="d">数据保存在浏览器本地。换设备或清缓存会丢失，建议定期导出备份。</div></div>'+
+  '<div class="st-c"><div class="t">📤 导出数据</div><div class="d">下载数据文件用于备份或迁移。</div><button class="btn btn-p btn-sm" onclick="exportD()">📤 导出</button></div>'+
+  '<div class="st-c"><div class="t">📥 导入数据</div><div class="d">选择之前导出的文件恢复数据。</div><input type="file" accept=".json" id="if" style="margin-bottom:6px;display:block"><button class="btn btn-g btn-sm" onclick="importD()">📥 导入</button></div>'+
+  '<div class="st-c"><div class="t">🔄 重置示例</div><div class="d">恢复初始示例数据（当前数据将丢失）。</div><button class="btn btn-r btn-sm" onclick="resetD()">⚠️ 重置</button></div>'+
+  '<div class="st-c"><div class="t">📋 关于</div><div class="d">换季衣物收纳 v3.0 · 纯前端版</div></div>'}
+function exportD(){var b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='wardrobe_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(u);toast('✅ 已导出')}
+function importD(){var f=document.getElementById('if').files[0];if(!f)return toast('请选择文件');var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(!d.rooms)return toast('格式不对');if(!confirm('导入将覆盖当前数据，确定？'))return;D=d;saveData(D);toast('✅ 已导入');renderOverview();renderAdmin()}catch(e){toast('❌ 解析失败')}};r.readAsText(f)}
+function resetD(){if(!confirm('确定恢复示例数据？当前数据将被覆盖。'))return;D=JSON.parse(JSON.stringify({"rooms":[{"n":"主卧","sp":[{"n":"衣柜顶部","b":[{"id":1,"l":"","is":[{"n":"羽绒服","c":2,"p":["photo_jacket.jpg"]},{"n":"加绒卫衣","c":3,"p":["photo_pants.jpg"]},{"n":"厚棉袜","c":5,"p":[]},{"n":"围巾","c":2,"p":[]}],"nt":"红色羽绒服+黑色羽绒服"},{"id":2,"l":"","is":[{"n":"秋衣秋裤套装","c":3,"p":[]},{"n":"羊毛衫","c":2,"p":["photo_jacket.jpg"]},{"n":"保暖背心","c":2,"p":[]}],"nt":""}]},{"n":"床底","b":[{"id":3,"l":"","is":[{"n":"厚外套","c":1,"p":["photo_jacket.jpg"]},{"n":"呢子大衣","c":1,"p":["photo_pants.jpg"]},{"n":"皮手套","c":1,"p":[]},{"n":"毛线帽","c":2,"p":[]},{"n":"厚围巾","c":1,"p":[]}],"nt":"厚外套是卡其色的"}]},{"n":"床头柜","b":[{"id":8,"l":"","is":[{"n":"床单","c":3,"p":[]},{"n":"被套","c":2,"p":[]},{"n":"枕头","c":2,"p":[]}],"nt":"备用床上用品"}]}]},{"n":"妞妞房间","sp":[{"n":"床底","b":[{"id":5,"l":"","is":[{"n":"黑色滑雪裤","c":1,"p":["photo_pants.jpg"]},{"n":"黑色外套","c":1,"p":["photo_jacket.jpg"]},{"n":"紫色衣服","c":1,"p":["photo_pants.jpg"]}],"nt":""}]},{"n":"顶部柜子","b":[{"id":6,"l":"","is":[{"n":"夏季短袖","c":4,"p":[]},{"n":"薄款长裤","c":3,"p":[]},{"n":"防晒衣","c":2,"p":[]}],"nt":"夏装暂存"}]},{"n":"床头衣柜","b":[{"id":7,"l":"","is":[{"n":"毛巾被","c":2,"p":[]},{"n":"薄被子","c":1,"p":[]},{"n":"枕套","c":4,"p":[]}],"nt":""}]}]},{"n":"板栗房间","sp":[{"n":"顶部柜子","b":[{"id":4,"l":"","is":[{"n":"黑色冲锋衣","c":1,"p":["photo_jacket.jpg"]}],"nt":"测试照片"}]}]}],"nextBagId":9}));saveData(D);toast('✅ 已重置');renderOverview();renderAdmin()}
+
+// ====== QR SCAN ======
+(function(){var p=new URLSearchParams(window.location.search),id=parseInt(p.get('bag'));if(id&&findB(id))setTimeout(function(){showBagD(id)},500)})();
+
+renderOverview();
+</script>
+</body>
+</html>
