@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" style="background:#f8f9fa">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="darkreader-lock">
+<meta name="night" content="force_light">
+<meta name="color-scheme" content="light only">
 <title>收纳管家</title>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
 :root{--bg:#f8f9fa;--card:#fff;--primary:#1f2937;--accent:#2563eb;--accent-hover:#1d4ed8;--text:#1f2937;--muted:#6b7280;--border:#e5e7eb;--radius:8px;--shadow:0 1px 3px rgba(0,0,0,.04)}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{background:var(--bg);color:var(--text);font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;min-height:100vh}
+html,body{background:#f8f9fa!important;color:#1f2937!important;font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;min-height:100vh}
 body{display:flex}
 /* 左侧导航 */
 .sidebar{width:200px;background:var(--card);border-right:1px solid var(--border);height:100vh;position:sticky;top:0;display:flex;flex-direction:column;padding:0}
@@ -256,6 +259,8 @@ function resetD(){if(!confirm('确定恢复示例数据？'))return;d=JSON.parse
 (function(){var p=new URLSearchParams(window.location.search),id=parseInt(p.get('bag'));if(id){var f=false;d.rooms.forEach(function(r){r.sp.forEach(function(s){s.b.forEach(function(b){if(b.id===id){f=true}})})});if(f)setTimeout(function(){showBag(id)},500)}})();
 
 renderO();
+// 强制浅色
+(function(){document.documentElement.style.background='#f8f9fa';document.body.style.background='#f8f9fa'})();
 </script>
 </body>
 </html>
