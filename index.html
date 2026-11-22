@@ -147,9 +147,9 @@ body{display:flex}
 <div id="modal" class="md"><div class="mc" id="modalC"></div></div>
 
 <script>
-function D(){try{var r=localStorage.getItem('wd');if(r){var o=JSON.parse(r);if(o&&o.rooms&&Array.isArray(o.rooms)){var bg=0;o.rooms.forEach(function(rm){(rm.sp||[]).forEach(function(s){bg+=(s.b||[]).length})});if(bg>0)return o}}}catch(e){}return null}
+function D(){try{var r=localStorage.getItem('wd');if(r){var o=JSON.parse(r);if(o&&o.rooms&&Array.isArray(o.rooms)){var bg=0;o.rooms.forEach(function(rm){(rm.sp||[]).forEach(function(s){bg+=(s.b||[]).length})});return o}}}catch(e){}return null}
 function S(d){try{localStorage.setItem('wd',JSON.stringify(d));localStorage.setItem('wd_v','3');return true}catch(e){t('❌ 保存失败：照片太多超出存储上限，请删除部分照片');return false}}
-var d={"rooms": [], "nb": 0};S(d);
+var d={"rooms": [], "nb": 0};var __sv=D();if(__sv)d=__sv;
 
 function t(m){var e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(function(){e.classList.remove('show')},2200)}
 function showP(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('act')});document.getElementById('p-'+id).classList.add('act');document.querySelectorAll('.side-btn').forEach(function(b,i){b.classList.toggle('act',['overview','admin','qrprint','settings'].indexOf(id)===i)});if(id==='overview')renderO();if(id==='admin')renderA();if(id==='qrprint')renderQ();if(id==='settings')renderS()}
