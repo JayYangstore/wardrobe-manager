@@ -189,8 +189,9 @@ function renderA(){
         h+='<div class="adm-b"><span><span class="id">'+(b.l||'#'+b.id)+'</span> '+its+'</span><div class="ac">';
         h+='<button class="btn-ic" onclick="showBag('+b.id+')" title="查看袋子详情">👁️</button>';
         h+='<button class="btn-ic" onclick="editBagF('+ri+','+si+','+bi+')" title="编辑袋子">✏️</button>';
-        h+='<button class="btn-ic r" onclick="deleteBagC('+ri+','+si+','+bi+')" title="删除袋子">🗑️</button></div></div>'})})});
-    h+='</div>'});
+        h+='<button class="btn-ic r" onclick="deleteBagC('+ri+','+si+','+bi+')" title="删除袋子">🗑️</button></div></div>'})
+    h+='</div>'
+  })});
   document.getElementById('adminC').innerHTML=h
 }
 
